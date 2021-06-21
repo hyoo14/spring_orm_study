@@ -14,8 +14,8 @@ public class JpaMain {
         tx.begin();
 
         try {
-            Member member = new Member(200L, "member200");
-            em.persist(member);
+            // Member member = new Member(200L, "member200");
+            // em.persist(member);
 
             // commit() 전 수동 flush 가능 - DB에 쿼리 직접 반영
             // em.flush();
