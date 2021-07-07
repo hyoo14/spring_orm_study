@@ -9,11 +9,21 @@ import javax.persistence.Table;
 //@Table(name = "USER") //테이블 매핑용
 public class Member {
 
+
     @Id
     private Long id;
 
     //@Column(name = "username") //테이블 매핑
     private String name;
+
+    public Member(){
+        //기본 생성자가 있어야 요류가 안 남.
+    }
+
+    public Member(Long id, String name) {
+        this.id = id;
+        this.name = name;
+    }
 
     public Long getId() {
         return id;
