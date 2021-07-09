@@ -14,9 +14,6 @@ public class Member {
     @Column(name = "USERNAME")
     private String username;
 
-//    @Column(name= "TEAM_ID")
-//    private Long teamId; //이렇게 안 쓰고 연관관계를 쓰자!
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "TEAM_ID")
     private Team team;
