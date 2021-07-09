@@ -14,49 +14,17 @@ public class Member {
     @Column(name = "USERNAME")
     private String username;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "TEAM_ID")
+    @ManyToOne
+    @JoinColumn(name = "TEAM_ID" , insertable = false, updatable = false)//읽기전용으로 만들어 준 것! //억지로 맞춘느낌!
     private Team team;
 
-    public Long getId() {
-        return id;
-    }
+    public Long getId() {        return id;    }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+    public void setId(Long id) {        this.id = id;    }
 
-    public String getUsername() {
-        return username;
-    }
+    public String getUsername() {        return username;    }
 
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public Team getTeam() {
-        return team;
-    }
-
-    public void setTeam(Team team) {
-        this.team = team;
-    }
-
-//    public void changeTeam(Team team) {
-//        this.team = team;
-//
-//        //아예 양방향을 여기서 고려.
-//        team.getMembers().add(this);
-//    }
-    //양쪽 다 있으면 안 되니 지워줌
+    public void setUsername(String username) {        this.username = username;    }
 
 
-    @Override
-    public String toString() {
-        return "Member{" +
-                "id=" + id +
-                ", username='" + username + '\'' +
-                ", team=" + team + //team.toString 또 호출한다는 말.
-                '}';
-    }
 }
