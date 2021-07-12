@@ -15,17 +15,19 @@ public class JpaMain {
         tx.begin();
 
         try {
-            Member member = saveMember(em);
+            Movie movie = new Movie();
+            movie.setDirector("aaaa");
+            movie.setActor("bbbb");
+            movie.setName("바람과함께사라지다");
+            movie.setPrice(10000);
 
-            Team team = new Team();
-            team.setName("teamA");
+            em.persist(movie);
 
-            //아래가 좀 애매해짐.
-            team.getMembers().add(member); //팀테이블에 인서트될 수도 없구..
-            //그래서 업데이트 쿼리가 하나 더 나감. 성능상 차이가 조금 있음(크진 않지만 무튼 손해는 손해)
-            //심각한 점: 왜 쿼리가 이렇게 되고 동작이 이런지 이해하기 힘들어짐.. 그래서 단방향 다대일로 씀
+            em.flush();
+            em.clear();
 
-            em.persist(team);
+            Item item = em.find(Item.class, movie.getId());
+            System.out.println("findMovie = " + item);
 
             tx.commit();//커밋하는 순간에 영속성 컨텍스트에 있는 것이 쿼리 날라감
         } catch( Exception e){
