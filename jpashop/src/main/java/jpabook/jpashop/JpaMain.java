@@ -1,5 +1,7 @@
 package jpabook.jpashop;
 
+import jpabook.jpashop.domain.Book;
+import jpabook.jpashop.domain.Item;
 import jpabook.jpashop.domain.Order;
 import jpabook.jpashop.domain.OrderItem;
 
@@ -21,18 +23,11 @@ public class JpaMain {
 
         try {
 
-            Order order = new Order();
-            //order.addOrderItem(new OrderItem());
+            Book book = new Book();
+            book.setName("JPA");
+            book.setAuthor("김영한");
 
-            //아래처럼 짜도 된다. 영방향 연관관계 아니어도 어플 개발하는데 문제 없음
-            em.persist(order);
-
-            OrderItem orderItem = new OrderItem();
-            orderItem.setOrder(order);
-
-            em.persist(orderItem);
-
-
+            em.persist(book);
 
             tx.commit();
         } catch( Exception e){
