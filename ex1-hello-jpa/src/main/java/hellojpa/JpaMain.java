@@ -18,41 +18,22 @@ public class JpaMain {
         tx.begin();
 
         try {
+            Child child1 = new Child();
+            Child child2 = new Child();
 
-            Team team = new Team();
-            team.setName("teamA");
-            em.persist(team);
-            Team teamB = new Team();
-            teamB.setName("teamB");
-            em.persist(teamB);
+            Parent parent = new Parent();
+            parent.addChild(child1);
+            parent.addChild(child2);
 
-            Member member1 = new Member();
-            member1.setUsername("hello1");
-            member1.setTeam(team);
-            em.persist(member1);
-
-            Member member2 = new Member();
-            member2.setUsername("hello2");
-            member2.setTeam(teamB);
-            em.persist(member2);
-
+            em.persist(parent);
+//            em.persist(child1);
+//            em.persist(child2);
             em.flush();
             em.clear();
 
-//            Member m = em.find(Member.class, member1.getId()); //jpa가 자체적으로 해줌
-
-            List<Member> members = em.createQuery("select m from Member m join fetch m.team", Member.class) //jpql은 쿼리 다 가져오고
-                    .getResultList(); //멤버개수만큼 즉시로딩 다 함
-
-            //SQL: select * from Member
-            //SQL: select * from Team where TEAM_ID = xxx //쿼리 엄청 나감
-//
-//            System.out.println("m = " + m.getTeam().getClass()); //Proxy
-//
-//            System.out.println("=========================");
-//            m.getTeam(); //여기서는 프록시 가져오니까 쿼리를 가져오지는 않음!
-//            m.getTeam().getName(); //디비서 값 가져옴. 지연로딩 세팅하면 연관된 것을 프록시로 가져오는 것!
-//            System.out.println("=========================");
+            Parent findParent = em.find(Parent.class, parent.getId());
+//            findParent.getChildList().remove(0);
+            em.remove(findParent);
 
             tx.commit();//커밋하는 순간에 영속성 컨텍스트에 있는 것이 쿼리 날라감
         } catch( Exception e){
