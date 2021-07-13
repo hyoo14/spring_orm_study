@@ -18,8 +18,8 @@ public class Member extends BaseEntity{
     @Column(name = "USERNAME")
     private String username;
 
-    @ManyToOne
-    @JoinColumn(name = "TEAM_ID" , insertable = false, updatable = false)//읽기전용으로 만들어 준 것! //억지로 맞춘느낌!
+    @ManyToOne(fetch = FetchType.LAZY) //멤버 클래스만 db서 조회
+    @JoinColumn(name = "TEAM_ID") // , insertable = false, updatable = false)//읽기전용으로 만들어 준 것! //억지로 맞춘느낌!
     private Team team;
 
 
