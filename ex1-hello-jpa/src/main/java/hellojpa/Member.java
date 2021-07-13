@@ -22,18 +22,6 @@ public class Member extends BaseEntity{
     @JoinColumn(name = "TEAM_ID" , insertable = false, updatable = false)//읽기전용으로 만들어 준 것! //억지로 맞춘느낌!
     private Team team;
 
-    @OneToOne
-    @JoinColumn(name = "LOCKER_ID")
-    private Locker locker;
-
-//    @ManyToMany
-//    @JoinTable(name = "MEMBER_PRODUCT")
-//    private List<Product> products = new ArrayList<>();
-    @OneToMany(mappedBy = "member")
-    private List<MemberProduct> memberProducts = new ArrayList<>();
-
-
-
 
     public Long getId() {        return id;    }
 
@@ -42,6 +30,14 @@ public class Member extends BaseEntity{
     public String getUsername() {        return username;    }
 
     public void setUsername(String username) {        this.username = username;    }
+
+    public Team getTeam() {
+        return team;
+    }
+
+    public void setTeam(Team team) {
+        this.team = team;
+    }
 
 
 }
