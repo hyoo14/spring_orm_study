@@ -5,6 +5,7 @@ import org.hibernate.Hibernate;
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Set;
 
 public class JpaMain {
 
@@ -19,26 +20,43 @@ public class JpaMain {
 
         try {
 
-            Address address = new Address("city", "street", "10000");
-
             Member member = new Member();
             member.setUsername("member1");
-            member.setHomeAddress(address);
+            member.setHomeAddress(new Address("homeCity","street","10000"));
+
+            member.getFavoriteFoods().add("치킨");
+            member.getFavoriteFoods().add("족발");
+            member.getFavoriteFoods().add("피자");
+
+            member.getAddressHistory().add(new AddressEntity("old1", "street", "10000"));
+            member.getAddressHistory().add(new AddressEntity("old2", "street", "10000"));
+
             em.persist(member);
 
-            //바꾸고 싶으면 새로 만들어야함. immutable되면
-            Address newAddress = new Address("NewCity", address.getStreet(), address.getCity());
-            member.setHomeAddress(newAddress); //이런식으로 쫙 바꿔줌
+            em.flush();
+            em.clear();
 
-//            Member member2 = new Member();
-//            member2.setUsername("member2");
-//            member2.setHomeAddress(copyAddress); //누가 실수로 그냥 adress 넣어도 막을 방법이 없다!
-//            em.persist(member2);
+            System.out.println("=================START=================");
+            Member findMember = em.find(Member.class, member.getId());
+//
+//            List<Address> addressHistory = findMember.getAddressHistory(); //콜렉션들은 지연로딩이다
+//            for (Address address : addressHistory) {
+//                System.out.println("address = " + address.getCity());
+//            }
+//
+//            Set<String> favoriteFoods = findMember.getFavoriteFoods(); //요것도 마찬가지
+//            for (String favoriteFood : favoriteFoods) {
+//                System.out.println("favorite food = " + favoriteFood);
+//            }
+            Address a = findMember.getHomeAddress();
+            findMember.setHomeAddress(new Address("newCity", a.getStreet(),  a.getZipcode() )); //통으로 갈아껴야
 
-            //
-            //member.getHomeAddress().setCity("newCity"); //둘 다 바뀌어버림 //이런 side effect는 잡기 진짜 어렵다
-            //같이 공유해서 뭘 하고 싶으면 어드레스를 엔티티로 만들어야!
+            //치킨->한식
+//            findMember.getFavoriteFoods().remove("치킨");
+//            findMember.getFavoriteFoods().add("한식");
 
+//            findMember.getAddressHistory().remove(new Address("old1", "street", "10000")); //equals에 hashcode로 잘 찾아서 지워줌
+//            findMember.getAddressHistory().add(new Address("newCity1", "street", "10000"));
 
             tx.commit();//커밋하는 순간에 영속성 컨텍스트에 있는 것이 쿼리 날라감
         } catch( Exception e){
