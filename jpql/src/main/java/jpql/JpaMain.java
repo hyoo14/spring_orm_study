@@ -16,34 +16,25 @@ public class JpaMain {
 
         try {
 //
-            Member member = new Member();
-            member.setUsername("member1");
-            member.setAge(10);
-            em.persist(member);
+            for( int i=0; i<100; i++){
+                Member member = new Member();
+                member.setUsername("member" +i);
+                member.setAge(i);
+                em.persist(member);
+
+            }
 
             em.flush();
             em.clear();
 
-//            List<Team> result = em.createQuery("select t from Member m join m.team t", Team.class) //조인 명시적으로 하는 것이 좋음
-//                    .getResultList();
-//            List resultList = em.createQuery("select m.username, m.age from Member m")
-//                    .getResultList();
-//            Object o = resultList.get(0);
-//            Object[] result = (Object[]) o;
-//            System.out.println("username = " + result[0]);
-//            System.out.println("age = " + result[1]);
-
-            List<MemberDTO> result = em.createQuery("select new jpql.MemberDTO(m.username, m.age) from Member m", MemberDTO.class)
+            List<Member> result = em.createQuery("select m from Member m order by m.age desc", Member.class)
+                    .setFirstResult(1)
+                    .setMaxResults(10)
                     .getResultList();
-
-            MemberDTO memberDTO = result.get(0);
-            System.out.println("memberDTO = " + memberDTO.getUsername());
-            System.out.println("memberDTO = " + memberDTO.getAge());
-
-//            Member findMember = result.get(0);
-//            findMember.setAge(20);
-//
-
+            System.out.println(("result.size = "+result.size()));
+            for (Member member1 : result) {
+                System.out.println("member1 = " + member1);
+            }
             tx.commit();//커밋하는 순간에 영속성 컨텍스트에 있는 것이 쿼리 날라감
         } catch( Exception e){
             tx.rollback();
