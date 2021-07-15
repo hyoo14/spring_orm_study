@@ -21,27 +21,27 @@ public class JpaMain {
             member.setAge(10);
             em.persist(member);
 
-//            TypedQuery<Member> query1 = em.createQuery("select m from Member m", Member.class);//타입정보 기본적으로 엔티티
-//            TypedQuery<String> query2 = em.createQuery("select m.username, m.age from Member m", String.class);//타입정보 기본적으로 엔티티
-//            Query query3 = em.createQuery("select m.username, m.age from Member m");//반환타입 명확하지 않을 때
+            em.flush();
+            em.clear();
 
-//            TypedQuery<Member> query = em.createQuery("select m from Member m where m.username = :username", Member.class);
-//
-//            //List<Member> resultList = query.getResultList() //여러개
-////            Member result = query.getSingleResult(); //결과 하나
-////            //Spring Data JPA -> exception 처리해줌
-////            System.out.println("result = "+ result);
-//
-//
-//            query.setParameter("username","member1");
-//            Member singleResult = query.getSingleResult();
+//            List<Team> result = em.createQuery("select t from Member m join m.team t", Team.class) //조인 명시적으로 하는 것이 좋음
+//                    .getResultList();
+//            List resultList = em.createQuery("select m.username, m.age from Member m")
+//                    .getResultList();
+//            Object o = resultList.get(0);
+//            Object[] result = (Object[]) o;
+//            System.out.println("username = " + result[0]);
+//            System.out.println("age = " + result[1]);
 
-            //위를 보통 (엮어서) 체이닝해줌
-            Member result = em.createQuery("select m from Member m where m.username = :username", Member.class)
-                    .setParameter("username", "member1")
-                    .getSingleResult();
+            List<MemberDTO> result = em.createQuery("select new jpql.MemberDTO(m.username, m.age) from Member m", MemberDTO.class)
+                    .getResultList();
 
-            System.out.println("singleResult = " +result.getUsername());
+            MemberDTO memberDTO = result.get(0);
+            System.out.println("memberDTO = " + memberDTO.getUsername());
+            System.out.println("memberDTO = " + memberDTO.getAge());
+
+//            Member findMember = result.get(0);
+//            findMember.setAge(20);
 //
 
             tx.commit();//커밋하는 순간에 영속성 컨텍스트에 있는 것이 쿼리 날라감
