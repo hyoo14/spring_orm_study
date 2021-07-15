@@ -32,7 +32,9 @@ public class JpaMain {
             em.clear();
 
 //            String query = "select m from Member m left join m.team t on t.name = 'teamA'";
-            String query = "select m from Member m join Team t on m.username = t.name";
+//            String query = "select (select avg(m1.age) from Member m1) as avgAge from Member m join Team t on m.username = t.name";
+            String query = "select mm.age, mm.username" +
+                    "from (select m.age, m.username from Member m) as mm"; //jpql에서 from subquery 안 됨
             List<Member> result = em.createQuery(query, Member.class)
                     .getResultList();
             System.out.println("result =" + result.size());
