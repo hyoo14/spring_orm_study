@@ -21,7 +21,7 @@ public class JpaMain {
             em.persist(team);
 
             Member member = new Member();
-            member.setUsername("teamA");
+            member.setUsername("관리자");
             member.setAge(10);
             member.setType(MemberType.ADMIN);
 
@@ -32,19 +32,22 @@ public class JpaMain {
             em.flush();
             em.clear();
 
-//            String query = "select m from Member m left join m.team t on t.name = 'teamA'";
-//            String query = "select (select avg(m1.age) from Member m1) as avgAge from Member m join Team t on m.username = t.name";
+//            String query =
+//                    "select " +
+//                            "case when m.age <= 10 then '학생요금'" +
+//                            "     when m.age >= 60 then '경로요금'" +
+//                            "     else '일반요금' " +
+//                            "end " +
+//                    "from Member m";
+            String query = "select nullif(m.username, '관리자') as username "+
+                         "from Member m";
 
-            String query = "select m.username, 'HELLO', true From Member m " +
-                            "where m.type = :userType";
-            List<Object[]> result = em.createQuery(query)
-                    .setParameter("userType", MemberType.ADMIN)
+            List<String> result = em.createQuery(query, String.class)
                     .getResultList();
-            for (Object[] objects : result) {
-                System.out.println("objects =" + objects[0]);
-                System.out.println("objects =" + objects[1]);
-                System.out.println("objects =" + objects[2]);
+            for (String s : result) {
+                System.out.println("s = " + s);
             }
+
 
             tx.commit();//커밋하는 순간에 영속성 컨텍스트에 있는 것이 쿼리 날라감
         } catch( Exception e){
