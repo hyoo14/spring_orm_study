@@ -1,5 +1,7 @@
 package jpql;
 
+import org.hibernate.mapping.Collection;
+
 import javax.persistence.*;
 import java.util.List;
 
@@ -54,13 +56,12 @@ public class JpaMain {
 //            }
             ////language=JPQ
 
-            String query = "select group_concat(m.username) From Member m";
+//            String query = "select m.team.name From Member m";
+            String query = "select m From Team t join t.members m"; //묵시적 조인 쓰지 마시오
 
-            List<String> result = em.createQuery(query, String.class)
+            List<Member> result = em.createQuery(query, Member.class)
                     .getResultList();
-            for (String s : result) {
-                System.out.println("s = " + s);
-            }
+            System.out.println("result = " + result);
 
             tx.commit();//커밋하는 순간에 영속성 컨텍스트에 있는 것이 쿼리 날라감
         } catch( Exception e){
