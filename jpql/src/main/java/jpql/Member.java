@@ -3,6 +3,10 @@ package jpql;
 import javax.persistence.*;
 
 @Entity
+@NamedQuery(
+        name="Member.findByUsername",
+        query = "select m from Member m where m.username = :username"
+) //쿼리 오류난 것 알 수 있음-장점
 public class Member {
     @Id @GeneratedValue
     private Long id;

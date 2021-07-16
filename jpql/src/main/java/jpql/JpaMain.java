@@ -44,17 +44,12 @@ public class JpaMain {
             em.flush();
             em.clear();
 
-            String query = "select m From Member m where m.team = :team";
-
-            List<Member> members = em.createQuery(query, Member.class)
-                    .setParameter("team", teamA)
+            List<Member> resultList = em.createNamedQuery("Member.findByUsername", Member.class)
+                    .setParameter("username", "회원1")
                     .getResultList();
-
-            for (Member member : members) {
+            for (Member member : resultList) {
                 System.out.println("member = "+member);
             }
-
-
             tx.commit();//커밋하는 순간에 영속성 컨텍스트에 있는 것이 쿼리 날라감
         } catch( Exception e){
             tx.rollback();
