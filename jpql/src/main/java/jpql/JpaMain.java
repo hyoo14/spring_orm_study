@@ -54,10 +54,18 @@ public class JpaMain {
 
             //회원 100명 -> N + 1
 
-            String query = "select distinct t From Team t join fetch t.members";//컬렉션 페치 조인
+            //String query = "select distinct t From Team t join fetch t.members";//컬렉션 페치 조인
             //String query = "select t From Team t join t.members";//그냥 조인과 비교
 
+            //페치 조인에 별칭 주면 안 됨 //엄청 복잡 패치조인 때 간혹 있긴 하나 사실상 사용 노우
+            //String query = "select distinct t From Team t join fetch t.members m join fetch m.team"; //조인 패치 몇단개로 가져갸아할 때. (이 때만 딱 씀. 하지만 매우 위험)
+            //String query = "select m From Member m join fetch m.team t"; //이렇게 뒤집으면 다대일이어서 페이징에서 문제가 없음
+            String query = "select t From Team t";
+            //lazy loading 2번 난 것이 되면서 쿼리 3번 나감 -> 성능이 안 나옴.
+
             List<Team> result = em.createQuery(query, Team.class)
+                    .setFirstResult(0)
+                    .setMaxResults(2)
                     .getResultList();
 
             System.out.println("reslut = " + result.size());
